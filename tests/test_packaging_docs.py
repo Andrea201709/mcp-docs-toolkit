@@ -21,7 +21,9 @@ def test_readme_has_five_minute_quickstart_and_public_sections():
     text = read("README.md")
 
     assert "5-Minute Quickstart" in text
-    assert "python3 -m venv .venv" in text
+    assert "Use Python 3.10 or newer" in text
+    assert "python3.11 -m venv .venv" in text
+    assert ".venv/bin/python -m pip install --upgrade pip setuptools" in text
     assert ".venv/bin/python -m pip install -e ." in text
     assert ".venv/bin/mcp-docs list-folders --mock" in text
     assert ".venv/bin/mcp-docs list-docs --mock --folder F001" in text
@@ -37,7 +39,7 @@ def test_license_is_mit():
     text = read("LICENSE")
 
     assert "MIT License" in text
-    assert "mcp-docs-toolkit maintainers" in text
+    assert "Andrea" in text
     assert "Permission is hereby granted" in text
 
 
@@ -67,6 +69,7 @@ def test_sanitization_doc_contains_final_scan_commands():
     assert "rg -n" in text
     assert "!.venv/**" in text
     assert "No real credentials" in text
+    assert "does not claim approval" in text
 
 
 def test_codex_oss_application_draft_explains_relevance():
@@ -81,7 +84,8 @@ def test_codex_oss_application_draft_explains_relevance():
     assert "Andrea201709" in text
     assert "https://github.com/Andrea201709/mcp-docs-toolkit" in text
     assert "creator and maintainer" in text
-    assert "not yet submitted" in text
+    assert "submitted" in text.lower()
+    assert "not yet submitted" not in text
 
 
 def test_github_release_checklist_keeps_pypi_optional():
@@ -92,6 +96,8 @@ def test_github_release_checklist_keeps_pypi_optional():
     assert "TestPyPI" in text
     assert "optional" in text.lower()
     assert "Do not publish" in text
+    assert "current application status" in text
+    assert "does not claim approval" in text
 
 
 def test_env_example_uses_placeholders_only():

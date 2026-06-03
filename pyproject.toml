@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [
-  { name = "mcp-docs-toolkit maintainers" }
+  { name = "Andrea", email = "1054866554@qq.com" }
 ]
 keywords = ["documents", "cli", "agents", "codex", "notion", "confluence"]
 classifiers = [

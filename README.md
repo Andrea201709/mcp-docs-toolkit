@@ -17,8 +17,11 @@ The project is intentionally generic. It does not include private hostnames, pri
 
 Create an isolated environment and install the CLI in editable mode from a local checkout:
 
+Use Python 3.10 or newer. Replace `python3.11` with `python3.10`, `python3.12`, or another Python 3.10+ executable if needed.
+
 ```bash
-python3 -m venv .venv
+python3.11 -m venv .venv
+.venv/bin/python -m pip install --upgrade pip setuptools
 .venv/bin/python -m pip install -e .
 ```
 
@@ -37,7 +40,8 @@ Run the built-in mock demo without external credentials:
 For the current experimental open-source release, install directly from the public GitHub repository:
 
 ```bash
-python3 -m venv .venv
+python3.11 -m venv .venv
+.venv/bin/python -m pip install --upgrade pip setuptools
 .venv/bin/python -m pip install "git+https://github.com/Andrea201709/mcp-docs-toolkit.git"
 .venv/bin/mcp-docs backends
 .venv/bin/mcp-docs list-folders --mock

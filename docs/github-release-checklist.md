@@ -5,7 +5,7 @@ Use this checklist before making the repository public, sharing it for review, o
 ## Repository Setup
 
 - Create a public GitHub repository named `mcp-docs-toolkit`.
-- Confirm `docs/codex-oss-application.md` lists the final GitHub username, public repository URL, and maintainer role before submitting the application.
+- Confirm `docs/codex-oss-application.md` lists the final GitHub username, public repository URL, maintainer role, and current application status.
 - Keep the default branch clean and avoid committing local downloads, virtual environments, caches, or private documents.
 - Confirm `.github/workflows/test.yml` is present so GitHub Actions can run tests on push and pull requests.
 - Keep internal planning files out of the public repository. `docs/superpowers/` is ignored and should remain in a private archive if needed.
@@ -39,7 +39,7 @@ Expected result: no output.
 - README explains editable local setup, GitHub installation, mock commands, backend selection, config inspection, security, and contribution guidance.
 - `docs/security.md` explains credentials, privacy boundaries, download behavior, and security reporting.
 - `docs/open-source-sanitization.md` contains the final scan commands.
-- `docs/codex-oss-application.md` remains a draft until the maintainer submits it.
+- `docs/codex-oss-application.md` reflects the submitted public project summary and does not claim approval.
 - `examples/.env.example` uses placeholders only.
 - `examples/codex-skill-template/SKILL.md` documents all supported backends.
 
@@ -47,7 +47,7 @@ Expected result: no output.
 
 - Confirm the public repository URL is `https://github.com/Andrea201709/mcp-docs-toolkit`.
 - Confirm the GitHub username is `Andrea201709` and maintainer role is `creator and maintainer`.
-- Submit the Codex for Open Source form only after the repository is public and the checklist above passes.
+- Keep the Codex for Open Source application notes aligned with the public repository status.
 
 ## Optional Later Packaging
 

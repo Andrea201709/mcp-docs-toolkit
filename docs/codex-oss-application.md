@@ -1,6 +1,6 @@
 # Codex for Open Source Application Draft
 
-Status: draft, not yet submitted.
+Status: submitted on 2026-06-02; keep this file as a public project summary and maintenance note.
 
 Official form: https://openai.com/form/codex-for-oss/
 
@@ -54,9 +54,9 @@ Support from Codex for Open Source would help maintain the project through:
 - automated test expansion;
 - clearer documentation for maintainers adopting the toolkit.
 
-## Notes Before Submission
+## Submission Notes
 
-- Confirm the repository is public.
-- Run the full test suite and sanitization scan.
-- Complete `docs/github-release-checklist.md`.
+- The repository was submitted after it was made public on GitHub.
+- The maintainer ran the release checklist before submission.
+- Keep `docs/github-release-checklist.md` current before future releases.
 - Do not claim approval or benefits until OpenAI confirms the application.

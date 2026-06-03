@@ -27,4 +27,4 @@ Expected result: no output.
 - No downloaded documents or user data.
 - Mock examples still run with `--mock`.
 - `docs/security.md` reflects current credential and privacy behavior.
-- `docs/codex-oss-application.md` is still a draft and has not been submitted.
+- `docs/codex-oss-application.md` reflects the submitted public project summary and does not claim approval.
