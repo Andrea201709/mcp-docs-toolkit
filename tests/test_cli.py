@@ -3,7 +3,7 @@ from io import StringIO
 from pathlib import Path
 
 from mcp_docs_toolkit.cli import main
-from mcp_docs_toolkit.errors import CONFIG_MISSING
+from mcp_docs_toolkit.errors import CONFIG_MISSING, DOWNLOAD_WRITE_FAILED
 
 
 def run_cli(argv, env=None):
@@ -24,6 +24,21 @@ def test_help_prints_usage_to_output():
     assert exit_code == 0
     assert "usage: mcp-docs" in text
     assert "list-folders" in text
+
+
+def test_version_prints_package_version():
+    exit_code, text = run_cli(["--version"])
+
+    assert exit_code == 0
+    assert text == "mcp-docs 0.1.1\n"
+
+
+def test_subcommand_help_shows_mock_flag():
+    exit_code, text = run_cli(["list-folders", "--help"])
+
+    assert exit_code == 0
+    assert "--mock" in text
+    assert "Use local mock data" in text
 
 
 def test_login_check_reports_missing_config_as_json():
@@ -185,6 +200,23 @@ def test_download_mock_rejects_unsafe_filename(monkeypatch, tmp_path):
     assert payload["stage"] == "download"
     assert "Unsafe download filename" in payload["error"]["message"]
     assert not (tmp_path.parent / "escape.pdf").exists()
+
+
+def test_download_mock_write_failure_returns_json_error(monkeypatch, tmp_path):
+    def raise_permission_error(self, parents=False, exist_ok=False):
+        raise PermissionError("permission denied")
+
+    monkeypatch.setattr(Path, "mkdir", raise_permission_error)
+
+    exit_code, text = run_cli(["download", "--mock", "--doc-id", "D001", "--output", str(tmp_path)], env={})
+    payload = json.loads(text)
+
+    assert exit_code == 3
+    assert payload["ok"] is False
+    assert payload["stage"] == "download"
+    assert payload["error"]["code"] == DOWNLOAD_WRITE_FAILED
+    assert payload["error"]["retryable"] is False
+    assert "Unable to write downloaded document" in payload["error"]["message"]
 
 
 def test_info_reports_required_vars_without_values():

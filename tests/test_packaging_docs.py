@@ -24,7 +24,8 @@ def test_readme_has_five_minute_quickstart_and_public_sections():
     assert "Use Python 3.10 or newer" in text
     assert "python3.11 -m venv .venv" in text
     assert ".venv/bin/python -m pip install --upgrade pip setuptools" in text
-    assert ".venv/bin/python -m pip install -e ." in text
+    assert ".venv/bin/python -m pip install -e \".[dev]\"" in text
+    assert ".venv/bin/python -m pytest tests/ -v --ignore=tests/test_mock_server.py" in text
     assert ".venv/bin/mcp-docs list-folders --mock" in text
     assert ".venv/bin/mcp-docs list-docs --mock --folder F001" in text
     assert ".venv/bin/mcp-docs download --mock --doc-id D001" in text
@@ -46,6 +47,7 @@ def test_license_is_mit():
 def test_contributing_documents_tests_and_no_secret_rules():
     text = read("CONTRIBUTING.md")
 
+    assert ".venv/bin/python -m pip install -e \".[dev]\"" in text
     assert ".venv/bin/python -m pytest tests/ -v --ignore=tests/test_mock_server.py" in text
     assert "Do not commit credentials" in text
     assert "MCP_DOCS_CLIENT_SECRET" in text
@@ -98,6 +100,13 @@ def test_github_release_checklist_keeps_pypi_optional():
     assert "Do not publish" in text
     assert "current application status" in text
     assert "does not claim approval" in text
+
+
+def test_pyproject_has_dev_optional_dependency():
+    text = read("pyproject.toml")
+
+    assert '[project.optional-dependencies]' in text
+    assert 'dev = ["pytest"]' in text
 
 
 def test_env_example_uses_placeholders_only():

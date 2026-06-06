@@ -22,7 +22,7 @@ Use Python 3.10 or newer. Replace `python3.11` with `python3.10`, `python3.12`, 
 ```bash
 python3.11 -m venv .venv
 .venv/bin/python -m pip install --upgrade pip setuptools
-.venv/bin/python -m pip install -e .
+.venv/bin/python -m pip install -e ".[dev]"
 ```
 
 Run the built-in mock demo without external credentials:
@@ -33,6 +33,12 @@ Run the built-in mock demo without external credentials:
 .venv/bin/mcp-docs list-docs --mock --folder F001 --page-size 1
 .venv/bin/mcp-docs search --mock --query example
 .venv/bin/mcp-docs download --mock --doc-id D001 --output ./downloads
+```
+
+Run the test suite:
+
+```bash
+.venv/bin/python -m pytest tests/ -v --ignore=tests/test_mock_server.py
 ```
 
 ## GitHub Installation

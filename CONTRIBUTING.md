@@ -6,8 +6,8 @@ Thank you for helping improve `mcp-docs-toolkit`.
 
 ```bash
 python3 -m venv .venv
-.venv/bin/python -m pip install -e .
-.venv/bin/python -m pip install pytest
+.venv/bin/python -m pip install --upgrade pip setuptools
+.venv/bin/python -m pip install -e ".[dev]"
 ```
 
 Run the test suite:

@@ -6,14 +6,16 @@ import argparse
 import os
 from pathlib import Path
 import sys
+from contextlib import redirect_stdout
 from typing import Mapping, Sequence, TextIO
 
+from mcp_docs_toolkit import __version__
 from mcp_docs_toolkit.adapters import available_backends, get_backend
 from mcp_docs_toolkit.adapters.base import BackendFactory
 from mcp_docs_toolkit.auth import request_access_token
 from mcp_docs_toolkit.client import DocumentApiClient
 from mcp_docs_toolkit.config import load_settings
-from mcp_docs_toolkit.errors import NETWORK_ERROR, NOT_IMPLEMENTED
+from mcp_docs_toolkit.errors import DOWNLOAD_WRITE_FAILED, NETWORK_ERROR, NOT_IMPLEMENTED
 from mcp_docs_toolkit.mock_transport import mock_opener, mock_settings
 from mcp_docs_toolkit.models import AccessToken, ApiResult, AuthResult, DownloadedDocument
 from mcp_docs_toolkit.output import error_response, success_response, to_json
@@ -22,6 +24,7 @@ from mcp_docs_toolkit.output import error_response, success_response, to_json
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="mcp-docs")
     parser.add_argument("--backend", default=None, help="Document backend to use (default: keycloak). Use 'mcp-docs backends' to list options.")
+    parser.add_argument("--version", action="store_true", help="Print the mcp-docs version and exit.")
     subparsers = parser.add_subparsers(dest="command")
 
     backends_parser = subparsers.add_parser("backends", help="List available document backends.")
@@ -223,6 +226,21 @@ def _write_api_result(stage: str, result: ApiResult, principal: str | None, out:
     return 3
 
 
+def _write_download_error(out: TextIO, message: str, token_source: str, principal: str | None = None) -> int:
+    _write(
+        out,
+        error_response(
+            stage="download",
+            code=DOWNLOAD_WRITE_FAILED,
+            message=message,
+            retryable=False,
+            principal=principal,
+            token_source=token_source,
+        ),
+    )
+    return 3
+
+
 def _legacy_mock_client(stage: str, out: TextIO) -> tuple[DocumentApiClient | None, str | None, int | None]:
     """Legacy keycloak mock path for backward compatibility."""
     settings = mock_settings()
@@ -334,8 +352,11 @@ def _handle_mock_download(doc_id: str, output_dir: str, out: TextIO, backend_nam
             ),
         )
         return 3
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_bytes(result.data.content)
+    try:
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_bytes(result.data.content)
+    except OSError:
+        return _write_download_error(out, "Unable to write downloaded document to output directory.", token_src)
     _write(
         out,
         success_response(
@@ -370,8 +391,11 @@ def _write_downloaded_document(result: ApiResult, output_dir: str, out: TextIO, 
             ),
         )
         return 3
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_bytes(result.data.content)
+    try:
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_bytes(result.data.content)
+    except OSError:
+        return _write_download_error(out, "Unable to write downloaded document to output directory.", token_source, principal=principal)
     _write(
         out,
         success_response(
@@ -408,7 +432,14 @@ def main(
     if argv in (["--help"], ["-h"]):
         parser.print_help(output)
         return 0
-    args = parser.parse_args(argv)
+    try:
+        with redirect_stdout(output):
+            args = parser.parse_args(argv)
+    except SystemExit as exc:
+        return int(exc.code)
+    if args.version:
+        output.write(f"mcp-docs {__version__}\n")
+        return 0
     current_env = os.environ if env is None else env
     backend_name = getattr(args, "backend", None)
 
