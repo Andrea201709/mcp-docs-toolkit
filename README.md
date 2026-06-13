@@ -2,6 +2,10 @@
 
 `mcp-docs-toolkit` is a CLI and Python toolkit for connecting document APIs to local developer and agent workflows. It provides a pluggable adapter architecture, structured JSON output, and credential-free mock demos for local agent workflows.
 
+## Why this exists
+
+AI coding agents often need project context from README files, design notes, API docs, release runbooks, and team documentation. `mcp-docs-toolkit` explores a safe, reusable pattern for giving agents that context without putting private tokens, internal API paths, or document contents into prompts or public repositories.
+
 Available backend adapters:
 
 - **keycloak** — Keycloak-protected document APIs (OAuth2 password grant)
